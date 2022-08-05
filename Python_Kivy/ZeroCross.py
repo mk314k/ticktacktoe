@@ -104,6 +104,79 @@ class ZeroCross:
             return "DRAW", None
         return None, None
 
+    def computeBestMove(self, maxDepth: int = 6) -> Optional[int]:
+        """Compute the optimal move index for the current player using alpha-beta Minimax."""
+        if self.__gameState is not None:
+            return None
+        moves = self.availableMoves()
+        if not moves:
+            return None
+
+        aiPlayer = self.__chance
+        humanPlayer = self.__zero if aiPlayer == self.__cross else self.__cross
+        n = self.__boardSize
+
+        # If board is completely empty, prefer center or corner immediately
+        if len(moves) == n * n:
+            center = (n * n) // 2
+            return center if center in moves else 0
+
+        lines = self.__iterWinningLines()
+
+        def evaluate(board: List[str], depth: int) -> int:
+            for line in lines:
+                first = board[line[0]]
+                if first != "" and all(board[idx] == first for idx in line):
+                    return (100 - depth) if first == aiPlayer else (depth - 100)
+            return 0
+
+        def minimax(
+            board: List[str], depth: int, isMaximizing: bool, alpha: int, beta: int
+        ) -> int:
+            score = evaluate(board, depth)
+            if score != 0:
+                return score
+            empty = [i for i, c in enumerate(board) if c == ""]
+            if not empty or depth >= maxDepth:
+                return 0
+
+            if isMaximizing:
+                best = -1000
+                for idx in empty:
+                    board[idx] = aiPlayer
+                    best = max(
+                        best, minimax(board, depth + 1, False, alpha, beta)
+                    )
+                    board[idx] = ""
+                    alpha = max(alpha, best)
+                    if beta <= alpha:
+                        break
+                return best
+            else:
+                best = 1000
+                for idx in empty:
+                    board[idx] = humanPlayer
+                    best = min(
+                        best, minimax(board, depth + 1, True, alpha, beta)
+                    )
+                    board[idx] = ""
+                    beta = min(beta, best)
+                    if beta <= alpha:
+                        break
+                return best
+
+        bestMove = moves[0]
+        bestScore = -1000
+        boardCopy = list(self.__board)
+        for idx in moves:
+            boardCopy[idx] = aiPlayer
+            moveScore = minimax(boardCopy, 0, False, -1000, 1000)
+            boardCopy[idx] = ""
+            if moveScore > bestScore:
+                bestScore = moveScore
+                bestMove = idx
+        return bestMove
+
     def __str__(self) -> str:
         return str(self.__board)
 
