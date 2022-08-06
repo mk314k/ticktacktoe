@@ -65,7 +65,19 @@ class MainWindow(BoxLayout):
             return
 
         self._applyMove(instance.id)
+        if (
+            self.vs_computer
+            and self.game.gameState() is None
+            and self.game.whoseChance() == self.ai_symbol
+        ):
+            Clock.schedule_once(self._triggerAiMove, 0.2)
 
+    def _triggerAiMove(self, _dt):
+        if self.game.gameState() is not None:
+            return
+        move = self.game.computeBestMove()
+        if move is not None:
+            self._applyMove(move)
 
     def _applyMove(self, idx: int):
         symbol = self.game.whoseChance()
