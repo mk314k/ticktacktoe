@@ -97,4 +97,71 @@ export class ZeroCross {
     return { state: null, line: null };
   }
 
+  computeBestMove(difficulty = "unbeatable") {
+    if (this.state !== null) return null;
+    const empty = [];
+    for (let i = 0; i < this.board.length; i++) {
+      if (this.board[i] === "") empty.push(i);
+    }
+    if (empty.length === 0) return null;
+
+    if (difficulty === "casual" && Math.random() < 0.35) {
+      return empty[Math.floor(Math.random() * empty.length)];
+    }
+
+    const n = this.boardSize;
+    if (empty.length === n * n) {
+      const center = Math.floor((n * n) / 2);
+      return empty.includes(center) ? center : 0;
+    }
+
+    const aiPlayer = this.chance;
+    const humanPlayer = aiPlayer === this.cross ? this.zero : this.cross;
+    const maxDepth = n === 3 ? 9 : 4;
+    const boardCopy = [...this.board];
+
+    const minimax = (depth, isMax, alpha, beta) => {
+      const check = this._checkEnd(boardCopy);
+      if (check.state === aiPlayer) return 100 - depth;
+      if (check.state === humanPlayer) return depth - 100;
+      if (check.state === "DRAW" || depth >= maxDepth) return 0;
+
+      if (isMax) {
+        let best = -1000;
+        for (let i = 0; i < boardCopy.length; i++) {
+          if (boardCopy[i] !== "") continue;
+          boardCopy[i] = aiPlayer;
+          best = Math.max(best, minimax(depth + 1, false, alpha, beta));
+          boardCopy[i] = "";
+          alpha = Math.max(alpha, best);
+          if (beta <= alpha) break;
+        }
+        return best;
+      } else {
+        let best = 1000;
+        for (let i = 0; i < boardCopy.length; i++) {
+          if (boardCopy[i] !== "") continue;
+          boardCopy[i] = humanPlayer;
+          best = Math.min(best, minimax(depth + 1, true, alpha, beta));
+          boardCopy[i] = "";
+          beta = Math.min(beta, best);
+          if (beta <= alpha) break;
+        }
+        return best;
+      }
+    };
+
+    let bestMove = empty[0];
+    let bestScore = -1000;
+    for (const idx of empty) {
+      boardCopy[idx] = aiPlayer;
+      const score = minimax(0, false, -1000, 1000);
+      boardCopy[idx] = "";
+      if (score > bestScore) {
+        bestScore = score;
+        bestMove = idx;
+      }
+    }
+    return bestMove;
+  }
 }
