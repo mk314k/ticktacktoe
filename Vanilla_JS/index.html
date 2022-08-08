@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tick Tack Toe — Vanilla JS</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="header">
+        <h1>Tick Tack Toe</h1>
+        <p id="status-text" class="status">Turn: O (Player)</p>
+      </header>
+
+      <section class="scoreboard">
+        <div class="score-card">
+          <span class="label">Player O</span>
+          <strong id="score-o">0</strong>
+        </div>
+        <div class="score-card">
+          <span class="label">Draws</span>
+          <strong id="score-draw">0</strong>
+        </div>
+        <div class="score-card">
+          <span class="label">Player X</span>
+          <strong id="score-x">0</strong>
+        </div>
+      </section>
+
+      <section id="board" class="board" aria-label="Tic Tac Toe Board"></section>
+
+      <footer class="controls">
+        <button id="mode-btn" type="button">Mode: vs Computer</button>
+        <button id="diff-btn" type="button">AI: Unbeatable</button>
+        <button id="reset-btn" type="button" class="primary">New Round</button>
+      </footer>
+    </main>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
