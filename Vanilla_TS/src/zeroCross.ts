@@ -117,4 +117,79 @@ export class ZeroCrossEngine {
     return { outcome: null, line: null };
   }
 
+  computeBestMove(difficulty: AiDifficulty = "unbeatable"): number | null {
+    if (this.outcome !== null) return null;
+    const empty: number[] = [];
+    for (let i = 0; i < this.board.length; i++) {
+      if (this.board[i] === "") empty.push(i);
+    }
+    if (empty.length === 0) return null;
+
+    if (difficulty === "casual" && Math.random() < 0.45) {
+      return empty[Math.floor(Math.random() * empty.length)];
+    }
+    if (difficulty === "tactical" && Math.random() < 0.2) {
+      return empty[Math.floor(Math.random() * empty.length)];
+    }
+
+    const n = this.boardSize;
+    if (empty.length === n * n) {
+      const center = Math.floor((n * n) / 2);
+      return empty.includes(center) ? center : 0;
+    }
+
+    const ai: SymbolMark = this.turn;
+    const human: SymbolMark = ai === "O" ? "X" : "O";
+    const maxDepth = n === 3 ? 9 : 4;
+    const scratch = [...this.board];
+
+    const minimax = (
+      depth: number,
+      isMax: boolean,
+      alpha: number,
+      beta: number
+    ): number => {
+      const res = this.evaluateBoard(scratch);
+      if (res.outcome === ai) return 100 - depth;
+      if (res.outcome === human) return depth - 100;
+      if (res.outcome === "DRAW" || depth >= maxDepth) return 0;
+
+      if (isMax) {
+        let best = -1000;
+        for (let i = 0; i < scratch.length; i++) {
+          if (scratch[i] !== "") continue;
+          scratch[i] = ai;
+          best = Math.max(best, minimax(depth + 1, false, alpha, beta));
+          scratch[i] = "";
+          alpha = Math.max(alpha, best);
+          if (beta <= alpha) break;
+        }
+        return best;
+      } else {
+        let best = 1000;
+        for (let i = 0; i < scratch.length; i++) {
+          if (scratch[i] !== "") continue;
+          scratch[i] = human;
+          best = Math.min(best, minimax(depth + 1, true, alpha, beta));
+          scratch[i] = "";
+          beta = Math.min(beta, best);
+          if (beta <= alpha) break;
+        }
+        return best;
+      }
+    };
+
+    let bestMove = empty[0];
+    let bestScore = -1000;
+    for (const idx of empty) {
+      scratch[idx] = ai;
+      const score = minimax(0, false, -1000, 1000);
+      scratch[idx] = "";
+      if (score > bestScore) {
+        bestScore = score;
+        bestMove = idx;
+      }
+    }
+    return bestMove;
+  }
 }
