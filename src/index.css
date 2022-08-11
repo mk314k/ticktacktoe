@@ -1,0 +1,30 @@
+:root {
+  --bg-linen: #f4efe6;
+  --surface-card: #fcf9f2;
+  --surface-well: #ece3d3;
+  --board-frame: #c8b499;
+  --border-warm: #d9cbb6;
+  --ink-primary: #2a2017;
+  --ink-muted: #6f5d4b;
+  --teal-o: #1b6d74;
+  --teal-o-soft: rgba(27, 109, 116, 0.12);
+  --terracotta-x: #c8562e;
+  --terracotta-x-soft: rgba(200, 86, 46, 0.12);
+  --sage-win: #d6f0de;
+  --sage-border: #3a8f5b;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #f9f5ec 0%, var(--bg-linen) 100%);
+  color: var(--ink-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
