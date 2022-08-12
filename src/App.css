@@ -153,3 +153,138 @@
   margin-bottom: 16px;
   font-size: 0.95rem;
   font-weight: 600;
+}
+
+.banner-win.win-o {
+  color: var(--teal-o);
+  font-weight: 800;
+}
+
+.banner-win.win-x {
+  color: var(--terracotta-x);
+  font-weight: 800;
+}
+
+.banner-draw {
+  color: var(--ink-muted);
+  font-weight: 700;
+}
+
+.ttt-board {
+  display: grid;
+  gap: 10px;
+  background: var(--board-frame);
+  padding: 11px;
+  border-radius: 18px;
+  margin-bottom: 18px;
+  box-shadow: inset 0 3px 6px rgba(42, 32, 23, 0.14);
+}
+
+.ttt-board.grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.ttt-board.grid-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.ttt-cell {
+  aspect-ratio: 1 / 1;
+  border: none;
+  border-radius: 12px;
+  background: var(--surface-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 16%;
+  box-shadow: 0 3px 0 rgba(42, 32, 23, 0.12);
+  transition: transform 0.12s ease, background 0.15s ease, box-shadow 0.12s ease;
+}
+
+.ttt-cell:hover:not(:disabled) {
+  background: #f6efe2;
+  transform: translateY(-1px);
+}
+
+.ttt-cell:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 rgba(42, 32, 23, 0.12);
+}
+
+.ttt-cell:disabled {
+  cursor: default;
+}
+
+.ttt-cell.mark-o {
+  color: var(--teal-o);
+}
+
+.ttt-cell.mark-x {
+  color: var(--terracotta-x);
+}
+
+.ttt-cell.winning-cell {
+  background: var(--sage-win);
+  box-shadow: 0 0 0 2px var(--sage-border), 0 3px 0 rgba(42, 32, 23, 0.12);
+  transform: scale(1.02);
+}
+
+.glyph {
+  width: 100%;
+  height: 100%;
+  animation: popIn 0.16s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0.5);
+    opacity: 0.2;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.ttt-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.action-btn {
+  flex: 1;
+  min-width: 96px;
+  padding: 10px 12px;
+  border-radius: 11px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.action-btn.secondary {
+  background: var(--surface-well);
+  color: var(--ink-primary);
+  border: 1px solid var(--border-warm);
+}
+
+.action-btn.secondary:hover:not(:disabled) {
+  background: #e3d7c3;
+}
+
+.action-btn.secondary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.action-btn.primary {
+  background: var(--ink-primary);
+  color: var(--surface-card);
+  border: 1px solid var(--ink-primary);
+}
+
+.action-btn.primary:hover {
+  background: #3f3124;
+}
