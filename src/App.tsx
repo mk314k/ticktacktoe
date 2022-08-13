@@ -78,6 +78,24 @@ export function App(): React.ReactElement {
     }
   };
 
+  useEffect(() => {
+    if (!vsComputer || outcome !== null || turn !== aiMark) {
+      setIsAiThinking(false);
+      return;
+    }
+    setIsAiThinking(true);
+    const timer = window.setTimeout(() => {
+      const eng = engineRef.current;
+      const move = eng.computeBestMove(difficulty);
+      if (move !== null) {
+        eng.makeMove(move);
+        syncFromEngine(true);
+      }
+      setIsAiThinking(false);
+    }, 210);
+    return () => window.clearTimeout(timer);
+  }, [vsComputer, outcome, turn, aiMark, difficulty]);
+
   const handleCellClick = (index: number) => {
     if (outcome !== null || isAiThinking) return;
     if (vsComputer && turn === aiMark) return;
